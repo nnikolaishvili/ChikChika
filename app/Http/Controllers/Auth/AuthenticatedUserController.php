@@ -32,7 +32,7 @@ class AuthenticatedUserController extends Controller
         if (!Auth::attempt($request->getCredentials(), $request->has('remember'))) {
             return redirect()->route('login')->withErrors([
                 'email' => trans('auth.failed')
-            ]);
+            ])->withInput();
         }
 
         $request->session()->regenerate();
