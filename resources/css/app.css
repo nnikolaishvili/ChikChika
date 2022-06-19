@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .alert-danger {
+        @apply text-sm text-red-600 font-semibold;
+    }
+}
