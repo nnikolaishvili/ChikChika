@@ -1,3 +1,5 @@
+<!doctype html>
+<html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,6 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/73871f78f8.js" crossorigin="anonymous"></script>
+    <title>{{ config('app.name') }}</title>
 </head>
-<body class="font-lato">
+<body class="bg-neutral-900">
+    @yield('content')
 </body>
+</html>

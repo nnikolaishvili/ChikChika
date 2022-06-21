@@ -4,6 +4,6 @@
 
 @layer components {
     .alert-danger {
-        @apply text-sm text-red-600 font-semibold;
+        @apply text-sm text-red-600;
     }
 }
