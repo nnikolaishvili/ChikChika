@@ -90,24 +90,26 @@
                             </div>
                         </div>
                         <div class="text-red-400">
-                            <form action="{{ route('tweet.destroy', $tweet->id) }}" method="post"
-                                  id="delete-tweet-form">
-                                @csrf
-                                @method('delete')
+                            @if ($tweet->user_id == $user->id)
+                                <form action="{{ route('tweet.destroy', $tweet->id) }}" method="post"
+                                      id="delete-tweet-form">
+                                    @csrf
+                                    @method('delete')
 
-                                <div class="dropdown">
-                                    <label tabindex="0" class="btn btn-circle btn-outline btn-xs">...</label>
-                                    <ul tabindex="0"
-                                        class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
-                                        <li>
-                                            <button type="submit"
-                                                    onclick="return confirm('Are you sure you want to delete this tweet?');">
-                                                <i class="fa-solid fa-trash text-red-500"></i> Delete
-                                            </button>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </form>
+                                    <div class="dropdown">
+                                        <label tabindex="0" class="btn btn-circle btn-outline btn-xs">...</label>
+                                        <ul tabindex="0"
+                                            class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                                            <li>
+                                                <button type="submit"
+                                                        onclick="return confirm('Are you sure you want to delete this tweet?');">
+                                                    <i class="fa-solid fa-trash text-red-500"></i> Delete
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </form>
+                            @endif
                         </div>
                     </div>
                 </div>

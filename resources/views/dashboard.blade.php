@@ -128,24 +128,26 @@
                                 </div>
                             </div>
                             <div class="text-red-400">
-                                <form action="{{ route('tweet.destroy', $tweet->id) }}" method="post"
-                                      id="delete-tweet-form">
-                                    @csrf
-                                    @method('delete')
+                                @if ($tweet->user_id == $user->id)
+                                    <form action="{{ route('tweet.destroy', $tweet->id) }}" method="post"
+                                          id="delete-tweet-form">
+                                        @csrf
+                                        @method('delete')
 
-                                    <div class="dropdown">
-                                        <label tabindex="0" class="btn btn-circle btn-outline btn-xs">...</label>
-                                        <ul tabindex="0"
-                                            class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
-                                            <li>
-                                                <button type="submit"
-                                                        onclick="return confirm('Are you sure you want to delete this tweet?');">
-                                                    <i class="fa-solid fa-trash text-red-500"></i> Delete
-                                                </button>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </form>
+                                        <div class="dropdown">
+                                            <label tabindex="0" class="btn btn-circle btn-outline btn-xs">...</label>
+                                            <ul tabindex="0"
+                                                class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                                                <li>
+                                                    <button type="submit"
+                                                            onclick="return confirm('Are you sure you want to delete this tweet?');">
+                                                        <i class="fa-solid fa-trash text-red-500"></i> Delete
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </form>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -159,7 +161,7 @@
                                 <div class="flex items-center">
                                     <div class="flex-1 justify-start text-left">
                                         <a href="{{ route('tweet.show', $tweet->id) }}"
-                                            class="btn btn-sm">
+                                           class="btn btn-sm">
                                             <i class="fa-solid fa-comment text-xl"></i>
                                             <span class="ml-2">{{ $tweet->comments->count() }}</span>
                                         </a>
@@ -199,7 +201,8 @@
 
             <div class="w-2/5 h-12">
                 <div class="relative text-gray-300 w-80 p-5 pb-0 mr-16">
-                    <input type="search" placeholder="Search Chikchika" class="input input-bordered input-info w-full max-w-xs" />
+                    <input type="search" placeholder="Search Chikchika"
+                           class="input input-bordered input-info w-full max-w-xs"/>
                 </div>
 
                 <div class="max-w-sm rounded-lg bg-blue-800 overflow-hidden shadow-lg m-4 mr-20">
