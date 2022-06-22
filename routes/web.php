@@ -21,10 +21,15 @@ Route::redirect('/', '/login');
 require __DIR__ . '/auth.php';
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::controller(TweetController::class)->group(function () {
-        Route::post('tweets','store')->name('tweet.store');
-        Route::get('tweets/{tweet}','show')->name('tweet.show');
-        Route::delete('tweets/{tweet}', 'destroy')->name('tweet.destroy');
+    Route::controller(TweetController::class)->name('tweet.')->group(function () {
+        Route::post('tweets','store')->name('store');
+
+        Route::prefix('tweets/{tweet}')->group(function () {
+            Route::get('/','show')->name('show');
+            Route::post('/', 'destroy')->name('destroy');
+            Route::post('/comment', 'storeComment')->name('comment.store');
+            Route::post('/comment/{comment}', 'destroyComment')->name('comment.destroy');
+        });
     });
 
     Route::get('/{username}', [DashboardController::class, 'dashboard'])->name('dashboard');

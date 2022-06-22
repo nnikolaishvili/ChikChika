@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\EmailVerificationRequest;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\{RedirectResponse, Request};
@@ -27,10 +28,10 @@ class VerifyEmailController extends Controller
     /**
      * Verify user's email
      *
-     * @param Request $request
+     * @param EmailVerificationRequest $request
      * @return RedirectResponse
      */
-    public function verify(Request $request): RedirectResponse
+    public function verify(EmailVerificationRequest $request): RedirectResponse
     {
         if ($request->user()->hasVerifiedEmail()) {
             return redirect()->route('dashboard', $request->user()->username);

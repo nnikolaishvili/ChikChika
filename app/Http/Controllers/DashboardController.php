@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    public function dashboard($username)
+    public function dashboard($username, Request $request)
     {
         $user = User::where('username', $username)->first();
 
@@ -25,13 +25,17 @@ class DashboardController extends Controller
                     ->orWhereIn('user_id', $userFollowingIds);
             })
             ->orderByDesc('created_at')
-            ->paginate(10);
+            ->paginate(10, page: $request->page);
 
-        return view('dashboard', [
+        $data = [
             'user' => $user,
             'tweets' => $tweets
-        ]);
+        ];
+
+        if ($request->ajax()) {
+            return view('components.tweets', $data);
+        }
+
+        return view('dashboard', $data);
     }
-
-
 }

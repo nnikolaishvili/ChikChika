@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\Login;
+use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,10 +24,10 @@ class AuthenticatedUserController extends Controller
     /**
      * Log user in
      *
-     * @param Login $request
+     * @param LoginRequest $request
      * @return RedirectResponse
      */
-    public function store(Login $request): RedirectResponse
+    public function store(LoginRequest $request): RedirectResponse
     {
         if (!Auth::attempt($request->getCredentials(), $request->has('remember'))) {
             return redirect()->route('login')->withErrors([

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\Register;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\View\View;
@@ -25,10 +25,10 @@ class RegisterController extends Controller
     /**
      * Registration
      *
-     * @param Register $request
+     * @param RegisterRequest $request
      * @return RedirectResponse
      */
-    public function store(Register $request): RedirectResponse
+    public function store(RegisterRequest $request): RedirectResponse
     {
         $validated = $request->validated();
         $validated['password'] = Hash::make($validated['password']);
