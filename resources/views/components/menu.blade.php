@@ -14,7 +14,7 @@
            class="mt-1 group flex items-center p-3 rounded-full hover:bg-blue-800 hover:text-blue-300">
             <i class="fa-solid fa-bell text-white text-2xl"></i> <span class="ml-3">Notifications</span>
         </a>
-        <a href="#"
+        <a href="{{ route('profile') }}"
            class="mt-1 group flex items-center p-3 rounded-full hover:bg-blue-800 hover:text-blue-300">
             <i class="fa-solid fa-user text-white text-2xl"></i> <span class="ml-3">Profile</span>
         </a>
@@ -35,7 +35,7 @@
                              alt=""/>
                     </div>
                     <div class="ml-3">
-                        <p class="text-base leading-6 text-white">
+                        <p class="text-base text-sm leading-6 text-white">
                             {{ $user->name }}
                         </p>
                         <p class="text-sm leading-5 text-gray-400 group-hover:text-gray-300 transition ease-in-out duration-150">
@@ -44,15 +44,24 @@
                     </div>
                 </div>
                 <div>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
+                    <div class="dropdown">
+                        <label tabindex="0"
+                               class="btn btn-circle btn-outline btn-xs">...</label>
+                        <ul tabindex="0"
+                            class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                            <li>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
 
-                        <div class="text-center">
-                            <button type="submit" class="text-sm text-gray-600 hover:text-white">
-                                Log out
-                            </button>
-                        </div>
-                    </form>
+                                    <div class="text-center">
+                                        <button type="submit" class="text-sm hover:text-white">
+                                            Log out {{ "@" . $user->username }}
+                                        </button>
+                                    </div>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </a>

@@ -25,7 +25,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'username',
         'email',
         'password',
-        'image_url'
+        'image_url',
+        'is_private'
     ];
 
     /**
@@ -57,9 +58,11 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->notify(new QueuedVerifyEmail);
     }
 
-    public function imageUrl()
+    public function imageUrl(): string
     {
-        return $this->image_url ?? asset('images/default_profile_400x400.png');
+        return $this->image_url
+            ? '/storage/' . $this->image_url
+            : asset('images/default_profile_400x400.png');
     }
 
     public function tweets(): HasMany
