@@ -64,9 +64,9 @@
                     <div class="flex-1 py-2 m-2">
                         @auth
                             <form action="{{ route('tweet.like', $tweet) }}" class="like-form" method="post">
-                                <button type="submit" data-is-liked="{{ $user->liked($tweet) ? 1 : 0 }}"
+                                <button type="submit" data-is-liked="{{ $authUser->liked($tweet) ? 1 : 0 }}"
                                         class="btn btn-sm">
-                                    @if ($user->liked($tweet))
+                                    @if ($authUser->liked($tweet))
                                         <i class="fa-solid fa-heart text-xl like-icon"></i>
                                     @else
                                         <i class="fa-regular fa-heart text-xl like-icon"></i>

@@ -54,7 +54,7 @@ class TweetController extends Controller
         $authUser = Auth::user();
 
         $data = [
-            'user' => $authUser,
+            'authUser' => $authUser,
             'tweet' => $tweet,
         ];
 

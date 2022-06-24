@@ -28,7 +28,7 @@ class DashboardController extends Controller
             ->paginate(10, page: $request->page);
 
         $data = [
-            'user' => $user,
+            'authUser' => $user,
             'tweets' => $tweets,
             'usersToFollow' => $usersToFollow
         ];

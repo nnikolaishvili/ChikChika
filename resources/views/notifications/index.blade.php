@@ -5,13 +5,13 @@
         <div class="flex">
 
             {{-- nagivation --}}
-            <x-menu :user="$user"></x-menu>
+            <x-menu :authUser="$authUser"></x-menu>
 
             <div class="w-full p-5 border border-gray-600 h-auto border-t-0 border-b-0">
                 <div class="max-w-md mb-5">
                     <h1 class="text-lg mb-5 font-bold">Notifications <i class="fa-solid fa-bell"></i></h1>
                     <div>
-                        @forelse ($user->notifications as $notification)
+                        @forelse ($authUser->notifications as $notification)
                             <div class="alert shadow-lg mb-4 w-full">
                                 <div class="flex w-full">
                                     @switch($notification->type)
@@ -73,7 +73,7 @@
                                             $text = "WEEKLY REPORT: " . $notification->data['followers_count'] . " users have followed you and " . $notification->data['followings_count'] . " have been followed by you since last week."
                                         @endphp
                                         <x-notification-text :weeklyReport="'true'"
-                                                             :route="route('profile', $user->username)"
+                                                             :route="route('profile', $authUser->username)"
                                                              :text="$text"
                                         ></x-notification-text>
                                         @break

@@ -5,7 +5,7 @@
         <div class="flex">
 
             {{-- nagivation --}}
-            <x-menu :user="$authUser"></x-menu>
+            <x-menu :authUser="$authUser"></x-menu>
 
             {{-- content --}}
             <div class="w-3/5 border border-gray-600 h-auto border-t-0 border-b-0">
@@ -21,6 +21,16 @@
                             <a href="{{ route('settings', $user->username) }}" class="btn btn-sm btn-outline-info">Set
                                 up
                                 profile</a>
+                        @else
+                            <form action="{{ route('user.follow', $user->id) }}" method="post"
+                                  class="follow-user-form">
+                                @csrf
+                                <button type="submit" data-following-id="{{ $user->id }}" data-follow="{{ !$user->hasFollower($authUser->id) ? 1 : 0 }}"
+                                        class="bg-transparent hover:bg-blue-500 text-white  hover:text-white py-2 px-4
+                                    text-sm w-24 border border-white hover:border-transparent rounded-full">
+                                    {{ !$user->hasFollower($authUser->id) ? 'follow' : 'unfollow' }}
+                                </button>
+                            </form>
                         @endif
                     @endauth
                 </div>
@@ -45,7 +55,7 @@
                 <hr class="border-gray-600">
 
                 @forelse($user->tweets as $tweet)
-                    <x-tweet :user="$user" :tweet="$tweet" :view="true"></x-tweet>
+                    <x-tweet :authUser="$authUser" :tweet="$tweet" :view="true"></x-tweet>
                 @empty
                     <div class="flex m-4 justify-center no-tweets">
                         <span class="ml-2">No tweets yet</span>

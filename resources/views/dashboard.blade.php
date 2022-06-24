@@ -5,7 +5,7 @@
         <div class="flex">
 
             {{-- nagivation --}}
-            <x-menu :user="$user"></x-menu>
+            <x-menu :authUser="$authUser"></x-menu>
 
             <div class="w-3/5 border border-gray-600 h-auto border-t-0 border-b-0">
                 <div class="flex">
@@ -19,7 +19,7 @@
 
                     <div class="flex px-4 mb-2">
                         <div class="m-2 w-10 py-1">
-                            <img class="inline-block h-10 w-10 rounded-full" src="{{ $user->imageUrl() }}" alt=""/>
+                            <img class="inline-block h-10 w-10 rounded-full" src="{{ $authUser->imageUrl() }}" alt=""/>
                         </div>
                         <div class="flex-1 px-2 mt-2">
                             <textarea class="textarea textarea-bordered w-full" rows="2" cols="50"
@@ -54,7 +54,7 @@
                 <hr class="border-gray-600">
 
                 <div id="tweets-list">
-                    <x-tweets :user="$user" :tweets="$tweets"></x-tweets>
+                    <x-tweets :authUser="$authUser" :tweets="$tweets"></x-tweets>
                 </div>
 
                 @if ($tweets->hasMorePages() && $tweets->currentPage() < $tweets->lastPage())

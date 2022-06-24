@@ -16,7 +16,7 @@
                 <i class="fa-solid fa-bell text-white text-2xl"></i>
                 <span class="ml-3">Notifications
                     @php
-                        $unreadNotificationsCount = $user->unreadNotifications()->count();
+                        $unreadNotificationsCount = $authUser->unreadNotifications()->count();
                     @endphp
 
                     @if ($unreadNotificationsCount)
@@ -24,7 +24,7 @@
                     @endif
                 </span>
             </a>
-            <a href="{{ route('profile', $user->username) }}"
+            <a href="{{ route('profile', $authUser->username) }}"
                class="mt-1 group flex items-center p-3 rounded-full hover:bg-blue-800 hover:text-blue-300">
                 <i class="fa-solid fa-user text-white text-2xl"></i> <span class="ml-3">Profile</span>
             </a>
@@ -38,19 +38,19 @@
     @auth
     <div class="flex-shrink-0 flex hover:bg-blue-00 rounded-full p-4 mt-12 mr-2">
         <div class="flex items-center justify-between w-full">
-            <a href="{{ route('profile', $user->username) }}" class="flex-shrink-0 group">
+            <a href="{{ route('profile', $authUser->username) }}" class="flex-shrink-0 group">
                 <div class="flex">
                     <div>
                         <img class="inline-block h-10 w-10 rounded-full"
-                             src="{{ $user->imageUrl() }}"
+                             src="{{ $authUser->imageUrl() }}"
                              alt=""/>
                     </div>
                     <div class="ml-3">
                         <p class="text-base text-sm leading-6 text-white">
-                            {{ $user->name }}
+                            {{ $authUser->name }}
                         </p>
                         <p class="text-sm leading-5 text-gray-400 group-hover:text-gray-300 transition ease-in-out duration-150">
-                            {{ "@" . $user->username }}
+                            {{ "@" . $authUser->username }}
                         </p>
                     </div>
                 </div>
@@ -67,7 +67,7 @@
 
                                 <div class="text-center">
                                     <button type="submit" class="text-sm hover:text-white">
-                                        Log out {{ "@" . $user->username }}
+                                        Log out {{ "@" . $authUser->username }}
                                     </button>
                                 </div>
                             </form>

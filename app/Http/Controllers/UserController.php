@@ -56,9 +56,7 @@ class UserController extends Controller
 
         abort_unless($authUser->id == $user->id, 403);
 
-        return view('user.settings', [
-            'user' => $authUser,
-        ]);
+        return view('user.settings', compact('authUser'));
     }
 
     /**

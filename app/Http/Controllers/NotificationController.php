@@ -15,10 +15,10 @@ class NotificationController extends Controller
      */
     public function index(): View
     {
-        $user = Auth::user();
+        $authUser = Auth::user();
 
-        $user->unreadNotifications()->update(['read_at' => now()]);
+        $authUser->unreadNotifications()->update(['read_at' => now()]);
 
-        return view('notifications.index', compact('user'));
+        return view('notifications.index', compact('authUser'));
     }
 }
