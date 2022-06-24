@@ -29,7 +29,8 @@ class UpdateProfileRequest extends FormRequest
             'username' => [
                 'required',
                 'string',
-                'max:255',
+                'alpha_dash',
+                'max:100',
                 Rule::unique('users', 'username')->ignore(auth()->id())
             ],
             'is_private' => 'sometimes|in:1',
