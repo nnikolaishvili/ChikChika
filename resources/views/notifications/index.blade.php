@@ -20,9 +20,10 @@
                                         @php
                                             $user = \App\Models\User::find($notification->data['following_id'])
                                         @endphp
-                                        <x-notification-text :route="route('tweet.show', $notification->data['tweet_id'])"
-                                                             :user="$user"
-                                                             :text="'The user has just tweeted.'">
+                                        <x-notification-text
+                                            :route="route('tweet.show', $notification->data['tweet_id'])"
+                                            :user="$user"
+                                            :text="'The user has just tweeted.'">
                                         </x-notification-text>
                                         @break
 
@@ -50,9 +51,10 @@
                                         @php
                                             $user = \App\Models\User::find($notification->data['user_id']);
                                         @endphp
-                                        <x-notification-text :route="route('tweet.show', $notification->data['tweet_id'])"
-                                                             :user="$user"
-                                                             :text="'The user has just liked your tweet.'"
+                                        <x-notification-text
+                                            :route="route('tweet.show', $notification->data['tweet_id'])"
+                                            :user="$user"
+                                            :text="'The user has just liked your tweet.'"
                                         ></x-notification-text>
                                         @break
 
@@ -60,9 +62,20 @@
                                         @php
                                             $user = \App\Models\User::find($notification->data['user_id']);
                                         @endphp
-                                        <x-notification-text :route="route('tweet.show', $notification->data['tweet_id'])"
-                                                             :user="$user"
-                                                             :text="'The user has just liked commented on your tweet.'"
+                                        <x-notification-text
+                                            :route="route('tweet.show', $notification->data['tweet_id'])"
+                                            :user="$user"
+                                            :text="'The user has just liked commented on your tweet.'"
+                                        ></x-notification-text>
+                                        @break
+
+                                        @case(\App\Notifications\WeeklyReport::class)
+                                        @php
+                                            $text = "WEEKLY REPORT: " . $notification->data['followers_count'] . " users have followed you and " . $notification->data['followings_count'] . " have been followed by you since last week."
+                                        @endphp
+                                        <x-notification-text :weeklyReport="'true'"
+                                                             :route="route('profile', $notification->notifiable->username)"
+                                                             :text="$text"
                                         ></x-notification-text>
                                         @break
                                     @endswitch

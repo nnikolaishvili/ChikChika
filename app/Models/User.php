@@ -135,4 +135,15 @@ class User extends Authenticatable implements MustVerifyEmail
             ->where('id', '!=', $authUser->id)
             ->limit(5);
     }
+
+    /**
+     * Scope a query to only include email verified users.
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeVerified(Builder $query): Builder
+    {
+        return $query->whereNotNull('email_verified_at');
+    }
 }

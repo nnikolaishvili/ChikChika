@@ -11,12 +11,19 @@
             </svg>
         </div>
         <div>
+            @if (isset($weeklyReport))
+                <div class="mb-2 text-lg">
+                    <i class="fa-solid fa-dove text-3xl"></i>
+                </div>
+                <div class="text-white text-lg">{{ config('app.name') }}</div>
+            @else
             <div class="mb-2">
                 <img class="inline-block h-10 w-10 rounded-full"
                      src="{{ $user->imageUrl() }}"
                      alt=""/>
             </div>
             <div class="text-white text-lg">{{ $user->name }}</div>
+            @endif
             <div class="text-xs">{{ $text }}</div>
         </div>
     </div>
