@@ -10,7 +10,7 @@
             <div class="w-3/5 border border-gray-600 h-auto border-t-0 border-b-0">
                 <div class="flex">
                     <div class="flex m-2">
-                        <a href="{{ route('dashboard', $user->username) }}"><i
+                        <a href="{{ route('dashboard') }}"><i
                                 class="fa-solid fa-arrow-left pl-4 py-2 text-xl text-white"></i></a>
                         <h2 class="px-4 py-2 text-xl text-white">Tweet</h2>
                     </div>
@@ -20,26 +20,28 @@
 
                 <x-tweet :user="$user" :tweet="$tweet"></x-tweet>
 
-                <form action="{{ route('tweet.comment.store', $tweet->id) }}" method="post">
-                    @csrf
+                @auth
+                    <form action="{{ route('tweet.comment.store', $tweet->id) }}" method="post">
+                        @csrf
 
-                    <div class="flex px-4 mb-2">
-                        <div class="m-2 w-10 py-1">
-                            <img class="inline-block h-10 w-10 rounded-full" src="{{ $user->imageUrl() }}" alt=""/>
-                        </div>
-                        <div class="flex-1 px-2 mt-2">
+                        <div class="flex px-4 mb-2">
+                            <div class="m-2 w-10 py-1">
+                                <img class="inline-block h-10 w-10 rounded-full" src="{{ $user->imageUrl() }}" alt=""/>
+                            </div>
+                            <div class="flex-1 px-2 mt-2">
                             <textarea class="textarea textarea-bordered w-full" rows="2" cols="50"
                                       placeholder="Tweet your reply" name="text"></textarea>
-                            @error('text')
-                            <div
-                                class="alert-danger bg-red-200 p-1 rounded-full text-center">{{ $message }}</div>
-                            @enderror
+                                @error('text')
+                                <div
+                                    class="alert-danger bg-red-200 p-1 rounded-full text-center">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="flex justify-center items-center mb-3">
+                                <button type="submit" class="btn btn-info btn-md rounded-full text-white">Reply</button>
+                            </div>
                         </div>
-                        <div class="flex justify-center items-center mb-3">
-                            <button type="submit" class="btn btn-info btn-md rounded-full text-white">Reply</button>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                @endauth
 
                 <hr class="border-gray-600">
 
@@ -48,22 +50,25 @@
                         <div class="comment comment-{{ $comment->id }}">
                             <div class="flex flex-shrink-0 p-4 pb-0">
                                 <div class="flex items-center justify-between w-full">
-                                    <div class="flex items-center ml-3">
-                                        <img class="inline-block h-10 w-10 rounded-full"
-                                             src="{{ $comment->user->imageUrl() }}"
-                                             alt="profile-image"/>
-                                        <div class="ml-3">
-                                            <p class="text-base leading-6 text-white">
-                                                {{ $comment->user->name }}
-                                                <span
-                                                    class="text-sm leading-5 text-gray-400 group-hover:text-gray-300 transition ease-in-out duration-150">
-                                            {{ '@' . $comment->user->username }} | {{ $comment->created_at->format('d M') }}
-                                          </span>
-                                            </p>
+                                    <a href="{{ route('profile', $comment->user->username) }}">
+                                        <div class="flex items-center ml-3">
+                                            <img class="inline-block h-10 w-10 rounded-full"
+                                                 src="{{ $comment->user->imageUrl() }}"
+                                                 alt="profile-image"/>
+                                            <div class="ml-3">
+                                                <p class="text-base leading-6 text-white">
+                                                    {{ $comment->user->name }}
+                                                    <span
+                                                        class="text-sm leading-5 text-gray-400 group-hover:text-gray-300 transition ease-in-out duration-150">
+                                                {{ '@' . $comment->user->username }} | {{ $comment->created_at->format('d M') }}
+                                              </span>
+                                                </p>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </a>
+
                                     <div class="text-red-400">
-                                        @if ($comment->user_id == $user->id)
+                                        @if ($comment->user_id == auth()->id())
                                             <form
                                                 action="{{ route('tweet.comment.destroy', ['tweet' => $tweet->id, 'comment' => $comment->id]) }}"
                                                 method="post"
@@ -112,63 +117,9 @@
 
             <!--right menu-->
             <div class="w-2/5 h-12">
-                <div class="relative text-gray-300 w-80 p-5 pb-0 mr-16">
-                    <input type="search" placeholder="Search Chikchika"
-                           class="input input-bordered input-info w-full max-w-xs"/>
-                </div>
-
-                <div class="max-w-sm rounded-lg bg-blue-800 overflow-hidden shadow-lg m-4 mr-20">
-                    <div class="flex">
-                        <div class="flex-1 m-2">
-                            <h2 class="px-4 py-2 text-lg w-48 text-white">Who to follow</h2>
-                        </div>
-                    </div>
-
-
-                    <hr class="border-gray-600">
-
-                    <!-- people to follow -->
-
-                    <div class="flex flex-shrink-0">
-                        <div class="flex-1 ">
-                            <div class="flex items-center w-48">
-                                <div>
-                                    <img class="inline-block h-10 w-auto rounded-full ml-4 mt-2"
-                                         src="{{asset('images/default_profile_400x400.png')}}"
-                                         alt=""/>
-                                </div>
-                                <div class="ml-3 mt-3">
-                                    <p class="text-base leading-6 text-white">
-                                        Random person
-                                    </p>
-                                    <p class="text-sm leading-5 text-gray-400 group-hover:text-gray-300 transition ease-in-out duration-150">
-                                        @Rand
-                                    </p>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="flex-1 px-4 py-2 m-2">
-                            <a href="" class=" float-right">
-                                <button
-                                    class="bg-transparent hover:bg-blue-500 text-white  hover:text-white py-2 px-4 border border-white hover:border-transparent rounded-full">
-                                    Follow
-                                </button>
-                            </a>
-                        </div>
-                    </div>
-
-                    <hr class="border-gray-600">
-
-                    <!--show more-->
-
-                    <div class="flex">
-                        <div class="flex-1 p-4">
-                            <h2 class="px-4 ml-2 w-48 text-blue-400">Show more</h2>
-                        </div>
-                    </div>
-
-                </div>
+                @auth
+                <x-follow-list :usersToFollow="$usersToFollow"></x-follow-list>
+                @endauth
 
                 <div class="flow-root m-6 inline">
                     <div class="flex-2">
@@ -204,5 +155,24 @@
                 })
             }
         })
+
+        $(".follow-user-form").submit(function (e) {
+            e.preventDefault();
+            let followingId = $(this).find('button').attr('data-following-id');
+            $.post($(this).attr('action'), {
+                "_token": "{{ csrf_token() }}",
+            }, function (response) {
+                if (response.status === 'success') {
+                    let followButton = $(".follow-user-form").find(`[data-following-id='${followingId}']`);
+                    if (followButton.attr('data-follow') == 1) {
+                        followButton.html('unfollow');
+                        followButton.attr('data-follow', 0);
+                    } else {
+                        followButton.html('follow');
+                        followButton.attr('data-follow', 1);
+                    }
+                }
+            })
+        });
     </script>
 @endpush

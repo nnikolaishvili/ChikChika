@@ -22,19 +22,23 @@ Route::redirect('/', '/login');
 require __DIR__ . '/auth.php';
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/home', [DashboardController::class, 'dashboard'])->name('dashboard');
+
     Route::controller(TweetController::class)->name('tweet.')->group(function () {
         Route::post('/tweets','store')->name('store');
 
         Route::prefix('tweets/{tweet}')->group(function () {
-            Route::get('/','show')->name('show');
             Route::post('/', 'destroy')->name('destroy');
             Route::post('/comment', 'storeComment')->name('comment.store');
             Route::post('/comment/{comment}', 'destroyComment')->name('comment.destroy');
         });
     });
 
-    Route::get('/profile', [UserController::class, 'getProfile'])->name('profile');
-    Route::post('/profile', [UserController::class, 'updateProfile']);
+    Route::get('/{user:username}/settings', [UserController::class, 'getSettings'])->name('settings');
+    Route::post('/{user:username}/settings', [UserController::class, 'updateSettings']);
 
-    Route::get('/{username}', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::post('/user/{user}/follow', [UserController::class, 'follow'])->name('user.follow');
 });
+
+Route::get('/tweets/{tweet}', [TweetController::class, 'show'])->name('tweet.show');
+Route::get('/{user:username}', [UserController::class, 'getProfile'])->name('profile');

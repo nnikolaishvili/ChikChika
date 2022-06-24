@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Tweet\{Comment\StoreCommentRequest, StoreRequest};
-use App\Models\{Comment, Tweet};
+use App\Models\{Comment, Tweet, User};
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\{JsonResponse, RedirectResponse, Request};
 use Illuminate\Support\Facades\Auth;
@@ -31,17 +32,34 @@ class TweetController extends Controller
      *
      * @param Tweet $tweet
      * @return View
+     * @throws AuthorizationException
      */
     public function show(Tweet $tweet): View
     {
+        $this->authorize('viewTweet', $tweet);
+
         $tweet->load(['comments' => function ($query) {
             $query->orderByDesc('created_at');
         }, 'comments.user']);
 
-        return view('tweets.show', [
-            'user' => Auth::user(),
-            'tweet' => $tweet
-        ]);
+        $authUser = Auth::user();
+
+        $data = [
+            'user' => $authUser,
+            'tweet' => $tweet,
+        ];
+
+        if ($authUser) {
+            $usersToFollow = User::whereDoesntHave('followers', function ($query) use ($authUser) {
+                $query->where('follower_id', $authUser->id);
+            })->where('id', '!=', $authUser->id)
+                ->limit(5)
+                ->get();
+
+            $data['usersToFollow'] = $usersToFollow;
+        }
+
+        return view('tweets.show', $data);
     }
 
     /**

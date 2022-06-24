@@ -33,7 +33,7 @@ class UpdateProfileRequest extends FormRequest
                 Rule::unique('users', 'username')->ignore(auth()->id())
             ],
             'is_private' => 'sometimes|in:1',
-            'image' => 'sometimes|image|mimes:jpg,png,svg'
+            'image' => 'sometimes|image|file|mimes:jpg,png,svg|max:10240' // max 10 mb
         ];
     }
 }

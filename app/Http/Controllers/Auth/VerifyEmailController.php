@@ -22,7 +22,7 @@ class VerifyEmailController extends Controller
             return view('auth.verify-email');
         }
 
-        return redirect()->route('dashboard', $request->user()->username);
+        return redirect()->route('dashboard');
     }
 
     /**
@@ -34,14 +34,14 @@ class VerifyEmailController extends Controller
     public function verify(EmailVerificationRequest $request): RedirectResponse
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->route('dashboard', $request->user()->username);
+            return redirect()->route('dashboard');
         }
 
         if ($request->user()->markEmailAsVerified()) {
             event(new Verified($request->user()));
         }
 
-        return redirect()->route('dashboard', $request->user()->username);
+        return redirect()->route('dashboard');
     }
 
     /**
@@ -53,7 +53,7 @@ class VerifyEmailController extends Controller
     public function store(Request $request): RedirectResponse
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->route('dashboard', $request->user()->username);
+            return redirect()->route('dashboard');
         }
 
         $request->user()->sendEmailVerificationNotification();

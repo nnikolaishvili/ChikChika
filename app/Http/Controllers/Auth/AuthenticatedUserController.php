@@ -37,7 +37,7 @@ class AuthenticatedUserController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->route('dashboard', Auth::user()->username);
+        return redirect()->route('dashboard');
     }
 
     /**

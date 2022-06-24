@@ -1,22 +1,25 @@
 <div class="tweet tweet-{{ $tweet->id }}">
     <div class="flex flex-shrink-0 p-4 pb-0">
         <div class="flex items-center justify-between w-full">
-            <div class="flex items-center ml-3">
-                <img class="inline-block h-10 w-10 rounded-full"
-                     src="{{ $tweet->user->imageUrl() }}"
-                     alt="profile-image"/>
-                <div class="ml-3">
-                    <p class="text-base leading-6 text-white">
-                        {{ $tweet->user->name }}
-                        <span
-                            class="text-sm leading-5 text-gray-400 group-hover:text-gray-300 transition ease-in-out duration-150">
+            <a href="{{ route('profile', $tweet->user->username) }}">
+                <div class="flex items-center ml-3">
+                    <img class="inline-block h-10 w-10 rounded-full"
+                         src="{{ $tweet->user->imageUrl() }}"
+                         alt="profile-image"/>
+                    <div class="ml-3">
+                        <p class="text-base leading-6 text-white">
+                            {{ $tweet->user->name }}
+                            <span
+                                class="text-sm leading-5 text-gray-400 group-hover:text-gray-300 transition ease-in-out duration-150">
                                 {{ '@' . $tweet->user->username }} | {{ $tweet->created_at->format('d M') }}
                               </span>
-                    </p>
+                        </p>
+                    </div>
                 </div>
-            </div>
+            </a>
+
             <div class="text-red-400">
-                @if ($tweet->user_id == $user->id)
+                @if ($tweet->user_id == auth()->id())
                     <form action="{{ route('tweet.destroy', $tweet->id) }}" method="post"
                           class="delete-tweet-form" data-id="{{ $tweet->id }}">
                         <div class="dropdown">
@@ -25,11 +28,11 @@
                             <ul tabindex="0"
                                 class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
                                 @if (isset($view))
-                                <li>
-                                    <a href="{{ route('tweet.show', $tweet->id) }}" class="text-blue-300">
-                                        <i class="fa-solid fa-trash"></i> View
-                                    </a>
-                                </li>
+                                    <li>
+                                        <a href="{{ route('tweet.show', $tweet->id) }}" class="text-blue-300">
+                                            <i class="fa-solid fa-trash"></i> View
+                                        </a>
+                                    </li>
                                 @endif
                                 <li>
                                     <button type="submit">

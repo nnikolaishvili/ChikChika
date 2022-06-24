@@ -9,13 +9,15 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    public function dashboard($username, Request $request)
+    public function dashboard(Request $request)
     {
-        $user = User::where('username', $username)->first();
+        $user = Auth::user();
 
-        abort_unless($user, 404);
-
-        abort_unless($user->id == Auth::id(), 403);
+        $usersToFollow = User::whereDoesntHave('followers', function ($query) use ($user) {
+            $query->where('follower_id', $user->id);
+        })->where('id', '!=', $user->id)
+            ->limit(5)
+            ->get();
 
         $userFollowingIds = $user->followings()->pluck('users.id');
 
@@ -29,7 +31,8 @@ class DashboardController extends Controller
 
         $data = [
             'user' => $user,
-            'tweets' => $tweets
+            'tweets' => $tweets,
+            'usersToFollow' => $usersToFollow
         ];
 
         if ($request->ajax()) {
