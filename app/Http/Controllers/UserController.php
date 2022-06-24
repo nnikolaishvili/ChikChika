@@ -15,14 +15,19 @@ use Illuminate\Support\Facades\Storage;
 class UserController extends Controller
 {
     /**
+     * Get profile view
+     *
+     * @param User $user
+     * @param Request $request
+     * @return View
      * @throws AuthorizationException
      */
-    public function getProfile(User $user, Request $request)
+    public function getProfile(User $user, Request $request): View
     {
         $this->authorize('viewProfile', $user);
 
         $user->load(['tweets' => function ($query) {
-            $query->orderByDesc('created_at');
+            $query->recentOnTop();
         }, 'tweets.comments', 'tweets.likes']);
 
         $authUser = Auth::user();
@@ -33,18 +38,19 @@ class UserController extends Controller
         ];
 
         if ($authUser) {
-            $usersToFollow = User::whereDoesntHave('followers', function ($query) use ($authUser) {
-                $query->where('follower_id', $authUser->id);
-            })->where('id', '!=', $authUser->id)
-                ->limit(5)
-                ->get();
-
+            $usersToFollow = User::toFollow($authUser)->get();
             $data['usersToFollow'] = $usersToFollow;
         }
 
         return view('profile', $data);
     }
 
+    /**
+     * Get set profile view
+     *
+     * @param User $user
+     * @return View
+     */
     public function getSettings(User $user): View
     {
         $authUser = Auth::user();
@@ -54,6 +60,13 @@ class UserController extends Controller
         return view('settings', compact('user'));
     }
 
+    /**
+     * Update user's profile information
+     *
+     * @param User $user
+     * @param UpdateProfileRequest $request
+     * @return RedirectResponse
+     */
     public function updateSettings(User $user, UpdateProfileRequest $request): RedirectResponse
     {
         $authUser = Auth::user();
@@ -75,7 +88,14 @@ class UserController extends Controller
         return redirect()->route('dashboard');
     }
 
-    public function follow(User $user, Request $request): JsonResponse
+    /**
+     * Follow or unfollow user
+     *
+     * @param User $user
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function toggleFollow(User $user, Request $request): JsonResponse
     {
         if ($request->ajax()) {
             $follower = Auth::user();

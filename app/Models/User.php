@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Notifications\QueuedVerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -90,13 +91,44 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(User::class, 'follower_user', 'following_id', 'follower_id')->withTimestamps();
     }
 
+    public function hasFollower($id)
+    {
+        return $this->followers()->where('users.id', $id)->first();
+    }
+
+    public function liked($tweet)
+    {
+        return (bool)$this->likes()->where('tweet_id', $tweet->id)->first();
+    }
+
+    public function unlike($tweet)
+    {
+        return $this->likes()->where('tweet_id', $tweet->id)->delete();
+    }
+
+    public function like($tweet)
+    {
+        return $this->likes()->create(['tweet_id' => $tweet->id]);
+    }
+
     public function isPrivate()
     {
         return $this->is_private;
     }
 
-    public function hasFollower($id)
+    /**
+     * Scope a query to only include unfollowed users.
+     *
+     * @param Builder $query
+     * @param User $authUser
+     * @return Builder
+     */
+    public function scopeToFollow(Builder $query, User $authUser): Builder
     {
-        return $this->followers()->where('users.id', $id)->first();
+        return $query->whereDoesntHave('followers', function ($query) use ($authUser) {
+            $query->where('follower_id', $authUser->id);
+        })
+            ->where('id', '!=', $authUser->id)
+            ->limit(5);
     }
 }

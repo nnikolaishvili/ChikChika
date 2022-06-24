@@ -29,6 +29,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::prefix('tweets/{tweet}')->group(function () {
             Route::post('/', 'destroy')->name('destroy');
+            Route::post('/like', 'toggleLike')->name('like');
             Route::post('/comment', 'storeComment')->name('comment.store');
             Route::post('/comment/{comment}', 'destroyComment')->name('comment.destroy');
         });
@@ -37,7 +38,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/{user:username}/settings', [UserController::class, 'getSettings'])->name('settings');
     Route::post('/{user:username}/settings', [UserController::class, 'updateSettings']);
 
-    Route::post('/user/{user}/follow', [UserController::class, 'follow'])->name('user.follow');
+    Route::post('/user/{user}/follow', [UserController::class, 'toggleFollow'])->name('user.follow');
 });
 
 Route::get('/tweets/{tweet}', [TweetController::class, 'show'])->name('tweet.show');

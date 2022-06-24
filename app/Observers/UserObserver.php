@@ -16,7 +16,9 @@ class UserObserver
     public function updating(User $user)
     {
         if ($user->isDirty('image_url')) {
-            Storage::disk('public')->delete($user->getOriginal('image_url'));
+            if ($user->getOriginal('image_url')) {
+                Storage::disk('public')->delete($user->getOriginal('image_url'));
+            }
         }
     }
 }

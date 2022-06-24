@@ -62,12 +62,27 @@
                         </a>
                     </div>
                     <div class="flex-1 py-2 m-2">
-                        <button
-                            class="btn btn-sm">
-                            {{-- <i class="fa-solid fa-heart text-xl"></i>--}}
-                            <i class="fa-regular fa-heart text-xl"></i>
-                            <span class="ml-2">{{ $tweet->likes->count() }}</span>
-                        </button>
+                        <form action="{{ route('tweet.like', $tweet) }}" class="like-form" method="post">
+                            @csrf
+                            @auth
+                                <button type="submit" data-is-liked="{{ auth()->user()->liked($tweet) ? 1 : 0 }}"
+                                        class="btn btn-sm">
+                                    @if (auth()->user()->liked($tweet))
+                                        <i class="fa-solid fa-heart text-xl like-icon"></i>
+                                    @else
+                                        <i class="fa-regular fa-heart text-xl like-icon"></i>
+                                    @endif
+                                    <span class="ml-2 likes-count">{{ $tweet->likes->count() }}</span>
+                                </button>
+                            @endauth
+
+                            @guest
+                                <button type="submit" class="btn btn-sm">
+                                    <i class="fa-regular fa-heart text-xl like-icon"></i>
+                                    <span class="ml-2 likes-count">{{ $tweet->likes->count() }}</span>
+                                </button>
+                            @endguest
+                        </form>
                     </div>
                 </div>
             </div>

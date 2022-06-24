@@ -138,33 +138,3 @@
         </div>
     </div>
 @endsection
-
-@push('scripts')
-    <script>
-        $('.tweet-text').each(function () {
-            let text = $(this).html();
-            let regex = /(\b(https?|ftp|file):\/\/[\-A-Z0-9+&@#\/%?=~_|!:,.;]*[\-A-Z09+&@#\/%=~_| ])/img
-            let replaced_text = text.replace(regex, "<a href='$1' class='text-blue-500' target='_blank'>$1</a>");
-            $(this).html(replaced_text);
-        });
-
-        $(".follow-user-form").submit(function (e) {
-            e.preventDefault();
-            let followingId = $(this).find('button').attr('data-following-id');
-            $.post($(this).attr('action'), {
-                "_token": "{{ csrf_token() }}",
-            }, function (response) {
-                if (response.status === 'success') {
-                    let followButton = $(".follow-user-form").find(`[data-following-id='${followingId}']`);
-                    if (followButton.attr('data-follow') == 1) {
-                        followButton.html('unfollow');
-                        followButton.attr('data-follow', 0);
-                    } else {
-                        followButton.html('follow');
-                        followButton.attr('data-follow', 1);
-                    }
-                }
-            })
-        });
-    </script>
-@endpush

@@ -39,7 +39,7 @@ class TweetController extends Controller
         $this->authorize('viewTweet', $tweet);
 
         $tweet->load(['comments' => function ($query) {
-            $query->orderByDesc('created_at');
+            $query->recentOnTop();
         }, 'comments.user']);
 
         $authUser = Auth::user();
@@ -50,12 +50,7 @@ class TweetController extends Controller
         ];
 
         if ($authUser) {
-            $usersToFollow = User::whereDoesntHave('followers', function ($query) use ($authUser) {
-                $query->where('follower_id', $authUser->id);
-            })->where('id', '!=', $authUser->id)
-                ->limit(5)
-                ->get();
-
+            $usersToFollow = User::toFollow($authUser)->get();
             $data['usersToFollow'] = $usersToFollow;
         }
 
@@ -98,10 +93,45 @@ class TweetController extends Controller
         return redirect()->back();
     }
 
+    /**
+     * Delete comment
+     *
+     * @param Tweet $tweet
+     * @param Comment $comment
+     * @return RedirectResponse
+     */
     public function destroyComment(Tweet $tweet, Comment $comment): RedirectResponse
     {
         $comment->delete();
 
         return redirect()->back();
+    }
+
+    /**
+     * Like or unlike tweet
+     *
+     * @param Tweet $tweet
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function toggleLike(Tweet $tweet, Request $request): JsonResponse
+    {
+        $authUser = Auth::user();
+
+        if ($authUser->liked($tweet)) {
+            $authUser->unlike($tweet);
+
+            return response()->json([
+                'status' => 'success',
+                'action' => 'unliked'
+            ]);
+        }
+
+        $authUser->like($tweet);
+
+        return response()->json([
+            'status' => 'success',
+            'action' => 'liked'
+        ]);
     }
 }
