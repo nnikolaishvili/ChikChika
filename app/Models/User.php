@@ -83,12 +83,16 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function followings(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'follower_user', 'follower_id', 'following_id')->withTimestamps();
+        return $this->belongsToMany(User::class, 'follower_user', 'follower_id', 'following_id')
+            ->using(FollowerUser::class)
+            ->withTimestamps();
     }
 
     public function followers(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'follower_user', 'following_id', 'follower_id')->withTimestamps();
+        return $this->belongsToMany(User::class, 'follower_user', 'following_id', 'follower_id')
+            ->using(FollowerUser::class)
+            ->withTimestamps();
     }
 
     public function hasFollower($id)
@@ -98,7 +102,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function liked($tweet)
     {
-        return (bool)$this->likes()->where('tweet_id', $tweet->id)->first();
+        return (bool)$this->likes->where('tweet_id', $tweet->id)->first();
     }
 
     public function unlike($tweet)

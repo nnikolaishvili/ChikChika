@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\TweetController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -35,10 +36,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
     });
 
-    Route::get('/{user:username}/settings', [UserController::class, 'getSettings'])->name('settings');
-    Route::post('/{user:username}/settings', [UserController::class, 'updateSettings']);
+    Route::controller(UserController::class)->group(function () {
+        Route::get('/{user:username}/settings', 'getSettings')->name('settings');
+        Route::post('/{user:username}/settings', 'updateSettings');
+        Route::post('/user/{user}/follow', 'toggleFollow')->name('user.follow');
+    });
 
-    Route::post('/user/{user}/follow', [UserController::class, 'toggleFollow'])->name('user.follow');
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
 });
 
 Route::get('/tweets/{tweet}', [TweetController::class, 'show'])->name('tweet.show');

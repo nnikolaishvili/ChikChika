@@ -28,21 +28,20 @@ class UserController extends Controller
 
         $user->load(['tweets' => function ($query) {
             $query->recentOnTop();
-        }, 'tweets.comments', 'tweets.likes']);
+        }, 'tweets.comments', 'tweets.likes', 'tweets.user']);
 
         $authUser = Auth::user();
 
         $data = [
-            'authUser' => Auth::user(),
-            'user' => $user
+            'authUser' => $authUser,
+            'user' => $user,
         ];
 
         if ($authUser) {
-            $usersToFollow = User::toFollow($authUser)->get();
-            $data['usersToFollow'] = $usersToFollow;
+            $data['usersToFollow'] = User::toFollow($authUser)->get();
         }
 
-        return view('profile', $data);
+        return view('user.profile', $data);
     }
 
     /**
@@ -57,7 +56,9 @@ class UserController extends Controller
 
         abort_unless($authUser->id == $user->id, 403);
 
-        return view('settings', compact('user'));
+        return view('user.settings', [
+            'user' => $authUser,
+        ]);
     }
 
     /**

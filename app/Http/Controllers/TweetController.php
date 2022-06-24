@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications\{CommentedTweet, LikedTweet, UserTweeted};
 use App\Http\Requests\Tweet\{Comment\StoreCommentRequest, StoreRequest};
 use App\Models\{Comment, Tweet, User};
 use Illuminate\Auth\Access\AuthorizationException;
@@ -20,9 +21,17 @@ class TweetController extends Controller
      */
     public function store(StoreRequest $request): RedirectResponse
     {
-        Auth::user()->tweets()->create([
+        $user = Auth::user();
+
+        $tweet = $user->tweets()->create([
             'text' => $request->validated('text')
         ]);
+
+        $followers = $user->followers()->get();
+
+        foreach ($followers as $follower) {
+            $follower->notify(new UserTweeted($user, $follower, $tweet));
+        }
 
         return redirect()->back();
     }
@@ -50,8 +59,7 @@ class TweetController extends Controller
         ];
 
         if ($authUser) {
-            $usersToFollow = User::toFollow($authUser)->get();
-            $data['usersToFollow'] = $usersToFollow;
+            $data['usersToFollow'] = User::toFollow($authUser)->get();
         }
 
         return view('tweets.show', $data);
@@ -89,6 +97,10 @@ class TweetController extends Controller
             'user_id' => Auth::id(),
             'text' => $validated['text']
         ]);
+
+        if (Auth::user()->isNot($tweet->user)) {
+            $tweet->user->notify(new CommentedTweet(Auth::user(), $tweet));
+        }
 
         return redirect()->back();
     }
@@ -128,6 +140,10 @@ class TweetController extends Controller
         }
 
         $authUser->like($tweet);
+
+        if ($authUser->isNot($tweet->user)) {
+            $tweet->user->notify(new LikedTweet($authUser, $tweet));
+        }
 
         return response()->json([
             'status' => 'success',

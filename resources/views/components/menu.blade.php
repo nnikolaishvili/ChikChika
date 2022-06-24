@@ -11,9 +11,18 @@
             <i class="fa-solid fa-house text-white text-2xl"></i> <span class="ml-3">Home</span>
         </a>
         @auth
-            <a href="#"
+            <a href="{{ route('notifications') }}"
                class="mt-1 group flex items-center p-3 rounded-full hover:bg-blue-800 hover:text-blue-300">
-                <i class="fa-solid fa-bell text-white text-2xl"></i> <span class="ml-3">Notifications</span>
+                <i class="fa-solid fa-bell text-white text-2xl"></i>
+                <span class="ml-3">Notifications
+                    @php
+                        $unreadNotificationsCount = $user->unreadNotifications()->count();
+                    @endphp
+
+                    @if ($unreadNotificationsCount)
+                    <span class="ml-1 badge badge-secondary">{{ $unreadNotificationsCount }}</span>
+                    @endif
+                </span>
             </a>
             <a href="{{ route('profile', $user->username) }}"
                class="mt-1 group flex items-center p-3 rounded-full hover:bg-blue-800 hover:text-blue-300">
