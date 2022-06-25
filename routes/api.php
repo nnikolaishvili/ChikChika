@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\{TweetController, UserController};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +14,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
+    Route::prefix('me')->controller(UserController::class)->group(function () {
+        Route::get('/', 'details');
+        Route::get('/followings', 'followings');
+        Route::get('/follows', 'follows');
+    });
+
+    Route::prefix('tweets')->controller(TweetController::class)->group(function () {
+        Route::get('/', 'tweets');
+        Route::post('/', 'store');
+
+        Route::prefix('{tweet}')->group(function () {
+            Route::get('/', 'show');
+            Route::get('/replies', 'replies');
+            Route::post('/like', 'like');
+            Route::delete('/unlike', 'unlike');
+            Route::post('/reply', 'reply');
+        });
+    });
 });
+

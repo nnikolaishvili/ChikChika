@@ -62,7 +62,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function imageUrl(): string
     {
         return $this->image_url
-            ? '/storage/' . $this->image_url
+            ? asset('/storage/' . $this->image_url)
             : asset('images/default_profile_400x400.png');
     }
 

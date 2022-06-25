@@ -106,4 +106,14 @@ class UserController extends Controller
 
         return response()->json(['status' => 'fail']);
     }
+
+    public function generateApiToken()
+    {
+        $token = Auth::user()->createToken('api-token')->plainTextToken;
+
+        return view('user.settings', [
+            'authUser' => Auth::user(),
+            'token' => $token
+         ]);
+    }
 }

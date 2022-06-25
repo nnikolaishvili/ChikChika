@@ -43,6 +43,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
+
+    Route::post('/token', [UserController::class, 'generateApiToken'])->name('token');
 });
 
 Route::get('/tweets/{tweet}', [TweetController::class, 'show'])->name('tweet.show');

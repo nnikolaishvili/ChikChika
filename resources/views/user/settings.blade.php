@@ -64,6 +64,16 @@
                         <button type="submit" class="btn btn-info btn-wide">Save</button>
                     </div>
                 </form>
+
+                <form action="{{ route('token') }}" method="post" class="mt-10 flex items-center">
+                    @csrf
+                    <div class="mr-4">
+                        <button type="submit" class="btn btn-wide">Generate API Token</button>
+                    </div>
+
+                    <input type="text" placeholder="Generated API token" name="username"
+                           class="input w-full input-bordered max-w-md" value="{{ $token ?? '' }}" disabled/>
+                </form>
             </div>
         </div>
     </div>
