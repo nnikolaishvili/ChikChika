@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -19,7 +20,7 @@ class TweetFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' => 1,
+            'user_id' => User::inRandomOrder()->first(),
             'text' => $this->faker->text(20) . $this->faker->url() . $this->faker->text(20)
         ];
     }
